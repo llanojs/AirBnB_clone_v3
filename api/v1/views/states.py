@@ -79,14 +79,10 @@ def update_a_state(state_id=None):
         body = request.get_json(silent=True)
         if body is None:
             return make_response(jsonify({'error': 'Not a JSON'}), 400)
-        if 'id' in body:
-            del body['id']
-        if 'created_at' in body:
-            del body['created_at']
-        if 'updated_at' in body:
-            del body['updated_at']
-        my_state.__dict__.update(body)
-        setattr(my_state, 'algo_mas', "funciona_no_jodaaaa!!!")
+
+        for key, value in body.items():
+            if key != 'id' and key != 'created_at' and key != 'updated_at':
+                setattr(my_state, key, value)
         my_state.save()
 
         return make_response(jsonify(my_state.to_dict()), 200)
