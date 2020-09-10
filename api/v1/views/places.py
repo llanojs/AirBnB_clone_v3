@@ -6,6 +6,7 @@
 """
 from models.place import Place
 from models.city import City
+from models.user import User
 from models import storage
 from api.v1.views import app_views
 from flask import jsonify, request, make_response, abort
@@ -66,7 +67,8 @@ def create_a_place(city_id=None):
         return make_response(jsonify({'error': 'Missing user_id'}), 400)
     if "name" not in body:
         return make_response(jsonify({'error': 'Missing name'}), 400)
-    if city_id and city:
+    user = storage.get(User, body['user_id'])
+    if city and user:
         body['city_id'] = city_id
         new = Place(**body)
         new.save()
@@ -77,7 +79,7 @@ def create_a_place(city_id=None):
 @app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=False)
 def update_a_place(place_id=None):
     """ Updates a place object according to ids id """
-    if city_id is None:
+    if place_id is None:
         return abort(404)
 
     my_place = storage.get(Place, place_id)
@@ -93,5 +95,5 @@ def update_a_place(place_id=None):
                 setattr(my_place, key, value)
         my_place.save()
 
-        return make_response(jsonify(my_city.to_dict()), 200)
+        return make_response(jsonify(my_place.to_dict()), 200)
     return abort(404)
