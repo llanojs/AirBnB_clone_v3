@@ -14,7 +14,7 @@ from flask import jsonify, request, make_response, abort
 
 @app_views.route('/places/<place_id>/reviews',
                  methods=['GET'], strict_slashes=False)
-def get_all_place_reviews():
+def get_all_place_reviews(place_id=None):
     """ Retrieves all the reviews of a place with a given id """
 
     if place_id is None:
@@ -23,7 +23,7 @@ def get_all_place_reviews():
     if my_place is None:
         return abort(404)
 
-    reviews = my_place.reviews()
+    reviews = my_place.reviews
     out = [review.to_dict() for review in reviews]
     return jsonify(out)
 
