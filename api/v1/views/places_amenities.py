@@ -23,7 +23,7 @@ def get_all_place_amenities():
     if my_place is None:
         return abort(404)
 
-    amenities = my_place.amenities()
+    amenities = my_place.amenities
     out = [review.to_dict() for review in amenities]
     return jsonify(out)
 
