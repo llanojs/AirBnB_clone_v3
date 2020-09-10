@@ -14,7 +14,7 @@ from flask import jsonify, request, make_response, abort
 def get_all_users():
     """ Retrieves all the users stored """
     users = storage.all(User)
-    out = [user.to_dict() for users in users.values()]
+    out = [user.to_dict() for user in users.values()]
     return jsonify(out)
 
 
@@ -85,5 +85,5 @@ def update_a_user(user_id=None):
             if key not in ['id', 'created_at', 'updated_at', 'email']:
                 setattr(my_user, key, value)
         my_user.save()
-        return make_response(jsonify(my_state.to_dict()), 200)
+        return make_response(jsonify(my_user.to_dict()), 200)
     return abort(404)
