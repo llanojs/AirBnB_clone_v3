@@ -60,7 +60,7 @@ def delete_a_review(review_id=None):
 
 @app_views.route('/places/<place_id>/reviews',
                  methods=['POST'], strict_slashes=False)
-def create_a_review():
+def create_a_review(place_id=None):
     """
         Creates a new Review object according to
         the HTTP body request dictionary
