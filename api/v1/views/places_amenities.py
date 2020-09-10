@@ -14,7 +14,7 @@ from flask import jsonify, request, make_response, abort
 
 @app_views.route('/places/<place_id>/amenities',
                  methods=['GET'], strict_slashes=False)
-def get_all_place_amenities():
+def get_all_place_amenities(place_id):
     """ Retrieves all the amenities of a place with a given id """
 
     if place_id is None:
@@ -56,7 +56,7 @@ def delete_a_place_amenity(rev_id=None):
 
 @app_views.route('/places/<place_id>/amenities/<amenity_id>',
                  methods=['POST'], strict_slashes=False)
-def link_an_amenity():
+def link_an_amenity(place_id=None, amenity_id=None):
     """
         Links an Amenity object to a place according to
         their respective id
