@@ -65,6 +65,13 @@ def create_a_review(place_id=None):
         Creates a new Review object according to
         the HTTP body request dictionary
     """
+    if place_id is None:
+        return abort(404)
+
+    my_place = storage.get(Place, place_id)
+    if my_place is None:
+        return abort(404)
+
     body = request.get_json(silent=True)
     if body is None:
         return make_response(jsonify({'error': 'Not a JSON'}), 400)
@@ -72,6 +79,7 @@ def create_a_review(place_id=None):
     if "user_id" not in body:
         return make_response(jsonify({'error': 'Missing user_id'}), 400)
 
+    user_id = body['user_id']
     my_user = storage.get(User, user_id)
     if my_user is None:
         return abort(404)
@@ -80,7 +88,8 @@ def create_a_review(place_id=None):
         return make_response(jsonify({'error': 'Missing text'}), 400)
 
     new = Review(**body)
-    new.save()
+    new.place_id = place_id
+    storage.save()
     return make_response(jsonify(new.to_dict()), 201)
 
 
