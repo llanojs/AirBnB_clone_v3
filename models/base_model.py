@@ -10,6 +10,7 @@ import sqlalchemy
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 import uuid
+import hashlib
 
 time = "%Y-%m-%dT%H:%M:%S.%f"
 
@@ -40,6 +41,12 @@ class BaseModel:
                 self.updated_at = datetime.strptime(kwargs["updated_at"], time)
             else:
                 self.updated_at = datetime.utcnow()
+
+            if self.__class__.__name__ == "User":
+                if kwargs.get("password", None):
+                    m = bytes(kwargs["password"], 'utf-8')
+                    kwargs["password"] = hashlib.md5(m).hexdigest()
+
             if kwargs.get("id", None) is None:
                 self.id = str(uuid.uuid4())
         else:
@@ -55,6 +62,10 @@ class BaseModel:
     def save(self):
         """updates the attribute 'updated_at' with the current datetime"""
         self.updated_at = datetime.utcnow()
+        if self.__class__.__name__ == "User":
+            m = bytes(self.password, 'utf-8')
+            self.password = hashlib.md5(m).hexdigest()
+
         models.storage.new(self)
         models.storage.save()
 
@@ -68,6 +79,8 @@ class BaseModel:
         new_dict["__class__"] = self.__class__.__name__
         if "_sa_instance_state" in new_dict:
             del new_dict["_sa_instance_state"]
+        if "password" in new_dict and models.storage_t == "db":
+            del new_dict["password"]
         return new_dict
 
     def delete(self):
