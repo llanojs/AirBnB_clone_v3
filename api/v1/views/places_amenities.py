@@ -31,7 +31,7 @@ def get_all_place_amenities(place_id):
 @app_views.route('/places/<place_id>/amenities/<amenity_id>',
                  methods=['DELETE'],
                  strict_slashes=False)
-def delete_a_place_amenity(rev_id=None):
+def delete_a_place_amenity(place_id=None, amenity_id=None):
     """ Removes a object according to its id """
 
     if place_id is None or amenity_id is None:
@@ -48,7 +48,7 @@ def delete_a_place_amenity(rev_id=None):
     if my_amenity not in my_place.amenities():
         return abort(404)
 
-    my_place.amenitites.remove(my_amenity)
+    my_place.amenities.remove(my_amenity)
     storage.save()
 
     return make_response(jsonify({}), 200)
@@ -76,7 +76,7 @@ def link_an_amenity(place_id=None, amenity_id=None):
     if my_amenity in my_place.amenities:
         return make_response(jsonify(my_amenity.to_dict()), 200)
 
-    my_place.amenitites.append(my_amenity)
+    my_place.amenities.append(my_amenity)
     storage.save()
 
     return make_response(jsonify(my_amenity.to_dict()), 201)
