@@ -73,7 +73,7 @@ def link_an_amenity(place_id=None, amenity_id=None):
     if my_amenity is None:
         return abort(404)
 
-    if my_amenity in my_place.amenities():
+    if my_amenity in my_place.amenities:
         return make_response(jsonify(my_amenity.to_dict()), 200)
 
     my_place.amenitites.append(my_amenity)
