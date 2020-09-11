@@ -45,7 +45,7 @@ def delete_a_place_amenity(place_id=None, amenity_id=None):
     if my_amenity is None:
         return abort(404)
 
-    if my_amenity not in my_place.amenities():
+    if my_amenity not in my_place.amenities:
         return abort(404)
 
     my_place.amenities.remove(my_amenity)
